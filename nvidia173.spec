@@ -3,9 +3,9 @@
 
 %define name		nvidia-current
 %define version		173.14.09
-%define rel		3
+%define rel		2
 
-%define priority	9700
+%define priority	9620
 
 # pkg0: plain archive
 # pkg1: + precompiled modules
@@ -16,10 +16,10 @@
 # For now, backportability is kept for 2006.0 / CS4 forwards.
 
 %define nameprefix		x11-driver-video-
-%define drivername		nvidia-current
+%define drivername		nvidia173
 %define driverpkgname		%{nameprefix}%{drivername}
 %define modulename		%{drivername}
-%define cards			GeForce FX and later cards
+%define cards			GeForce FX based cards
 %define xorg_libdir		%{_libdir}/xorg
 %define nvidia_driversdir	%{xorg_libdir}/modules/drivers/%{drivername}
 %define nvidia_extensionsdir	%{xorg_libdir}/modules/extensions/%{drivername}
@@ -30,6 +30,11 @@
 %define nvidia_xvmcconfdir	%{_sysconfdir}/%{drivername}
 %define ld_so_conf_dir		%{_sysconfdir}/%{drivername}
 %define ld_so_conf_file		ld.so.conf
+
+%if %{mdkversion} <= 200810
+%define drivername		nvidia-current
+%define cards			GeForce FX and later cards
+%endif
 
 %if %{mdkversion} <= 200710
 %define nameprefix		%{nil}
@@ -77,7 +82,7 @@
 %define _requires_exceptions %common_requires_exceptions
 %endif
 
-Summary:	NVIDIA proprietary X.org driver and libraries, current driver series
+Summary:	NVIDIA proprietary X.org driver and libraries, 173.14.xx series
 Name:		%{name}
 Version:	%{version}
 Release:	%mkrel %{rel}
@@ -98,10 +103,10 @@ Epoch:		1
 %endif
 
 %description
-Source package of the current NVIDIA proprietary driver. Binary
-packages are named x11-driver-video-nvidia-current on Mandriva Linux
-2008, nvidia97xx on Mandriva 2007.1, and nvidia on 2007.0 and
-earlier.
+Source package of the 173.14.xx series NVIDIA proprietary driver.
+Binary packages are named x11-driver-video-nvidia173 on 2009,
+x11-driver-video-nvidia-current on 2008, nvidia97xx on 2007.1, and
+nvidia on 2007.0 and earlier.
 
 %package -n %{driverpkgname}
 Summary:	NVIDIA proprietary X.org driver and libraries for %cards
@@ -124,18 +129,6 @@ Suggests:	%{drivername}-doc-html
 Conflicts:	x11-server-common < 1.4
 # Proper support for versioned kmod() was added in 2008.1:
 Requires:	kmod(%{modulename}) = %{version}
-%endif
-# Some very old obsoletes, could be probably removed soon:
-Obsoletes:	NVIDIA_GLX
-Provides:	NVIDIA_GLX
-# Obsoletes for naming changes:
-%if %{mdkversion} >= 200710
-Obsoletes:	nvidia < 1:%{version}-%{release}
-Provides:	nvidia = 1:%{version}-%{release}
-%endif
-%if %{mdkversion} >= 200800
-Obsoletes:	nvidia97xx < %{version}-%{release}
-Provides:	nvidia97xx = %{version}-%{release}
 %endif
 
 %description -n %{driverpkgname}
@@ -160,14 +153,6 @@ Requires:	dkms
 Requires(post):	dkms
 Requires(preun): dkms
 Requires:	%{driverpkgname} = %{version}
-%if %{mdkversion} >= 200710
-Obsoletes:	dkms-nvidia < 1:%{version}-%{release}
-Provides:	dkms-nvidia = 1:%{version}-%{release}
-%endif
-%if %{mdkversion} >= 200800
-Obsoletes:	dkms-nvidia97xx < %{version}-%{release}
-Provides:	dkms-nvidia97xx = %{version}-%{release}
-%endif
 
 %description -n dkms-%{drivername}
 NVIDIA kernel module for %cards. This
@@ -177,14 +162,6 @@ is to be used with the %{driverpkgname} package.
 Summary:	NVIDIA XvMC development library and OpenGL headers
 Group:		Development/C
 Requires:	%{driverpkgname} = %{version}-%{release}
-%if %{mdkversion} >= 200710
-Obsoletes:	nvidia-devel < 1:%{version}-%{release}
-Provides:	nvidia-devel = 1:%{version}-%{release}
-%endif
-%if %{mdkversion} >= 200800
-Obsoletes:	nvidia97xx-devel < %{version}-%{release}
-Provides:	nvidia97xx-devel = %{version}-%{release}
-%endif
 
 %description -n %{drivername}-devel
 NVIDIA XvMC static development library and OpenGL headers for
