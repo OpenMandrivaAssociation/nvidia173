@@ -1,7 +1,7 @@
 
 # I love OpenSource :-(
 
-%define name		nvidia-current
+%define name		nvidia173
 %define version		173.14.09
 %define rel		2
 
