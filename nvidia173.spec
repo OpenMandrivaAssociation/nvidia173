@@ -2,7 +2,7 @@
 # I love OpenSource :-(
 
 %define name		nvidia173
-%define version		173.14.09
+%define version		173.14.12
 %define rel		2
 
 %define priority	9620
@@ -10,7 +10,7 @@
 # pkg0: plain archive
 # pkg1: + precompiled modules
 # pkg2: + 32bit compatibility libraries
-%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg0
+%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg1
 %define pkgname64	NVIDIA-Linux-x86_64-%{version}-pkg2
 
 # For now, backportability is kept for 2006.0 / CS4 forwards.
