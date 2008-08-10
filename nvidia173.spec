@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.12
-%define rel		2
+%define rel		3
 
 %define priority	9620
 
@@ -438,6 +438,9 @@ fi
 %endif
 %if %{mdkversion} >= 200710
 	--slave %{_sysconfdir}/modprobe.d/nvidia.conf nvidia_modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
+%endif
+%if %{mdkversion} >= 200900
+	--slave %{_libdir}/xorg/modules/extensions/libdri.so libdri.so %{_libdir}/xorg/modules/extensions/standard/libdri.so \
 %endif
 %if %{mdkversion} >= 200800
 	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so
