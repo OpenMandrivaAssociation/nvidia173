@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.12
-%define rel		3
+%define rel		4
 
 %define priority	9620
 
@@ -91,6 +91,8 @@ Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.
 # 2.6.24 xen support with run-time checking. Most chunks disabled, see
 # https://qa.mandriva.com/show_bug.cgi?id=36989
 Source3:	nvidia-2.6.24-xen.patch
+Source4:	nvidia173-173.14.12-kill_proc.patch
+Patch:		nvidia173-173.14.12-2.6.27.patch
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -183,6 +185,10 @@ HTML version of the README.txt file provided in package
 sh %{nsource} --extract-only
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
+pushd %{pkgname}
+%patch -p1
+popd
+
 # Now works properly on xen, as reported by guillomovitch, so remove the xen
 # check:
 perl -pi -e 's/^module:(.*) xen-sanity-check (.*)$/module:$1 $2/' \
@@ -240,6 +246,7 @@ chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.s
 
 install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 install -m644 %{SOURCE3} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+install -m644 %{SOURCE4} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 # -p1 for dkms:
 #sed -i 's,usr/src/nv,nv,g' %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches/*.diff.txt
 
@@ -256,6 +263,8 @@ CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
 PATCH[0]="nvidia-2.6.24-xen.patch"
 PATCH_MATCH[0]="^2.6.2[4-9]"
+PATCH[1]="nvidia173-173.14.12-kill_proc.patch"
+PATCH_MATCH[1]="^2\.6\.(2[7-9])|([3-9][0-9]+)|([1-9][0-9][0-9]+)"
 EOF
 
 # OpenGL and CUDA headers
