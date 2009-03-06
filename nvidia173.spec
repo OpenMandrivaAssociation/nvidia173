@@ -2,7 +2,7 @@
 # I love OpenSource :-(
 
 %define name		nvidia173
-%define version		173.14.16
+%define version		173.14.17
 %define rel		1
 
 %define priority	9620
