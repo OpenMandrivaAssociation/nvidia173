@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.17
-%define rel		2
+%define rel		3
 
 %define priority	9620
 
@@ -455,6 +455,15 @@ fi
 	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so
 %endif
 %endif
+
+# ensure the links are created if its current state is manual
+link_state=$(%{_sbindir}/update-alternatives --display gl_conf | head -1)
+link_state=$(expr match "$link_state" 'gl_conf - status is \(.*\).')
+
+if [ "$link_state" != "auto" ]; then
+	current_link=$(readlink %{_sysconfdir}/alternatives/gl_conf)
+	%{_sbindir}/update-alternatives --set gl_conf "$current_link"
+fi
 
 %if %{mdkversion} >= 200800
 if [ "${current_glconf}" = "%{_sysconfdir}/nvidia97xx/ld.so.conf" ]; then
