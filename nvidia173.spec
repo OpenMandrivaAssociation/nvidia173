@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.18
-%define rel		1
+%define rel		2
 
 %define priority	9620
 
@@ -119,7 +119,7 @@ Requires(post): update-alternatives >= 1.9.0
 Requires(postun): update-alternatives >= 1.9.0
 %endif
 %if %{mdkversion} >= 200910
-Conflicts:	x11-server-common < 1.6.0-3
+Conflicts:	x11-server-common < 1.6.0-11
 %endif
 %if %{mdkversion} >= 200800
 # Proprietary driver handling rework:
@@ -446,7 +446,6 @@ fi
 %endif
 %if %{mdkversion} >= 200910
 	--slave %{xorg_extra_modules} xorg_extra_modules %{nvidia_extensionsdir} \
-	--slave %{_bindir}/Xorg Xorg %{_bindir}/Xorg-1.6
 %else
 %if %{mdkversion} >= 200900
 	--slave %{_libdir}/xorg/modules/extensions/libdri.so libdri.so %{_libdir}/xorg/modules/extensions/standard/libdri.so \
