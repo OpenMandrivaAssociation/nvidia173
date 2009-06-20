@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.18
-%define rel		2
+%define rel		3
 
 %define priority	9620
 
@@ -93,6 +93,7 @@ Version:	%{version}
 Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
+Source2:	nvidia173-173.14.18-for-linux-2.6.30.patch
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -244,7 +245,7 @@ install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
 install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
-#install -m644 %{SOURCE3} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+install -m644 %{SOURCE2} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 # -p1 for dkms:
 #sed -i 's,usr/src/nv,nv,g' %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches/*.diff.txt
 
@@ -259,6 +260,8 @@ DEST_MODULE_NAME[0]="%{modulename}"
 MAKE[0]="make SYSSRC=\${kernel_source_dir} module"
 CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
+PATCH[0]="nvidia173-173.14.18-for-linux-2.6.30.patch"
+PATCH_MATCH[0]="^2.6.30"
 EOF
 
 # OpenGL and CUDA headers
