@@ -95,12 +95,23 @@ Version:	%{version}
 Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
+# GPLv2 source code; see also http://cgit.freedesktop.org/~aplattner/
+Source2:	ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-%{version}.tar.gz
+Source3:	ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-xconfig-%{version}.tar.gz
+# -Werror=format-string
+Patch0:		nvidia-settings-format-string.patch
+# https://qa.mandriva.com/show_bug.cgi?id=39921
+Patch1:		nvidia-settings-enable-dyntwinview-mdv.patch
+# --as-needed + --no-undefined
+Patch2:		nvidia-xconfig-ldflags-order.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
 Group: 		System/Kernel and hardware
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	ImageMagick
+BuildRequires:  gtk+2-devel
+BuildRequires:  libxxf86vm-devel
 %if "%{driverpkgname}" == "nvidia"
 # old nvidia package had different versioning
 Epoch:		1
@@ -184,8 +195,11 @@ HTML version of the README.txt file provided in package
 %{driverpkgname}.
 
 %prep
-%setup -c -T
+%setup -q -c -T -a 2 -a 3
 sh %{nsource} --extract-only
+%patch0 -p0
+%patch1 -p0
+%patch2 -p0
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
 # Now works properly on xen, as reported by guillomovitch, so remove the xen
@@ -234,6 +248,19 @@ EOF
 
 mv %{pkgname}/usr/share/doc/html html-doc
 
+# It wants to link Xxf86vm statically (presumably because it is somewhat more
+# rare than the other dependencies)
+sed -i 's|-Wl,-Bstatic||' nvidia-settings-1.0/Makefile
+sed -i 's|-O ||' nvidia-settings-1.0/Makefile
+sed -i 's|-O ||' nvidia-xconfig-1.0/Makefile
+rm nvidia-settings-1.0/src/*/*.a
+
+%build
+cd nvidia-settings-1.0
+%make CFLAGS="%optflags" LDFLAGS="%{?ldflags}"
+cd ../nvidia-xconfig-1.0
+%make CFLAGS="%optflags %{?ldflags} -IXF86Config-parser"
+
 %install
 rm -rf %{buildroot}
 cd %{pkgname}/usr
@@ -269,6 +296,8 @@ cp -a include/*		%{buildroot}%{_includedir}/%{drivername}
 install -d -m755	%{buildroot}%{nvidia_bindir}
 install -m755 bin/*	%{buildroot}%{nvidia_bindir}
 rm %{buildroot}%{nvidia_bindir}/{makeself.sh,mkprecompiled,tls_test,tls_test_dso.so}
+install -m755 ../../nvidia-settings-1.0/nvidia-settings %{buildroot}%{nvidia_bindir}
+install -m755 ../../nvidia-xconfig-1.0/nvidia-xconfig %{buildroot}%{nvidia_bindir}
 %if %{mdkversion} >= 200700
 install -d -m755			%{buildroot}%{_bindir}
 touch					%{buildroot}%{_bindir}/nvidia-settings
@@ -283,6 +312,10 @@ chmod 0755				%{buildroot}%{_bindir}/*
 install -d -m755		%{buildroot}%{_mandir}/man1
 install -m644 share/man/man1/*	%{buildroot}%{_mandir}/man1
 rm %{buildroot}%{_mandir}/man1/nvidia-installer.1*
+rm %{buildroot}%{_mandir}/man1/nvidia-settings.1*
+rm %{buildroot}%{_mandir}/man1/nvidia-xconfig.1*
+install -m755 ../../nvidia-settings-1.0/doc/nvidia-settings.1 %{buildroot}%{_mandir}/man1
+install -m755 ../../nvidia-xconfig-1.0/nvidia-xconfig.1 %{buildroot}%{_mandir}/man1
 %if %{mdkversion} >= 200700
 cd %{buildroot}%{_mandir}/man1
 rename nvidia  disabled-%{drivername} *
