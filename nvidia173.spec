@@ -29,6 +29,7 @@
 %define nvidia_bindir		%{nvidia_libdir}/bin
 %define nvidia_deskdir		%{_datadir}/%{drivername}
 %define nvidia_xvmcconfdir	%{_sysconfdir}/%{drivername}
+%define nvidia_xinitdir         %{_sysconfdir}/%{drivername}
 %define ld_so_conf_dir		%{_sysconfdir}/%{drivername}
 %define ld_so_conf_file		ld.so.conf
 
@@ -62,6 +63,7 @@
 %define nvidia_bindir		%{_bindir}
 %define nvidia_xvmcconfdir	%{_sysconfdir}/X11
 %define nvidia_deskdir		%{_datadir}/applications
+%define nvidia_xinitdir		%{_sysconfdir}/X11/xinit.d
 %endif
 
 %define biarches x86_64
@@ -432,6 +434,19 @@ echo "alias nvidia %{modulename}" >	%{buildroot}%{_sysconfdir}/%{drivername}/mod
 install -d -m755 %{buildroot}%{nvidia_xvmcconfdir}
 echo "libXvMCNVIDIA_dynamic.so.1" > %{buildroot}%{nvidia_xvmcconfdir}/XvMCConfig
 
+# xinit script
+install -d -m755 %{buildroot}%{nvidia_xinitdir}
+cat > %{buildroot}%{nvidia_xinitdir}/nvidia-settings.xinit <<EOF
+# to be sourced
+LOAD_NVIDIA_SETTINGS="yes"
+[ -f %{_sysconfdir}/sysconfig/nvidia-settings ] && . %{_sysconfdir}/sysconfig/nvidia-settings
+[ "\$LOAD_NVIDIA_SETTINGS" = "yes" ] && %{_bindir}/nvidia-settings --load-config-only
+EOF
+%if %{mdkversion} >= 200700
+install -d -m755 %{buildroot}%{_sysconfdir}/X11/xinit.d
+touch %{buildroot}%{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
+%endif
+
 # don't strip files
 export DONT_STRIP=1
 
@@ -470,6 +485,7 @@ fi
 	--slave %{_bindir}/nvidia-xconfig nvidia_xconfig %{nvidia_bindir}/nvidia-xconfig \
 	--slave %{_bindir}/nvidia-bug-report.sh nvidia_bug_report %{nvidia_bindir}/nvidia-bug-report.sh \
 	--slave %{_sysconfdir}/X11/XvMCConfig xvmcconfig %{nvidia_xvmcconfdir}/XvMCConfig \
+	--slave %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit nvidia-settings.xinit %{nvidia_xinitdir}/nvidia-settings.xinit \
 %if %{mdkversion} <= 200800
 	--slave %{_libdir}/xorg/modules/libwfb.so libwfb %{_libdir}/xorg/modules/libnvidia-wfb.so.%{version} \
 %endif
@@ -534,27 +550,32 @@ rm -rf %{buildroot}
 %doc %{pkgname}/usr/share/doc/*
 %doc %{pkgname}/LICENSE
 
-# ld.so.conf, modprobe.conf, xvmcconfig
+# ld.so.conf, modprobe.conf, xvmcconfig, xinit
 %if %{mdkversion} >= 200710
 # 2007.1+
 %ghost %{_sysconfdir}/ld.so.conf.d/GL.conf
+%ghost %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
 %ghost %{_sysconfdir}/modprobe.d/nvidia.conf
 %dir %{_sysconfdir}/%{drivername}
 %{_sysconfdir}/%{drivername}/modprobe.conf
 %{_sysconfdir}/%{drivername}/ld.so.conf
 %{_sysconfdir}/%{drivername}/XvMCConfig
+%{_sysconfdir}/%{drivername}/nvidia-settings.xinit
 %else
 %if %{mdkversion} >= 200700
 # 2007.0
 %ghost %{_sysconfdir}/ld.so.conf.d/GL.conf
+%ghost %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
 %dir %{_sysconfdir}/ld.so.conf.d/GL
 %dir %{_sysconfdir}/%{drivername}
 %{_sysconfdir}/ld.so.conf.d/GL/%{drivername}.conf
 %{_sysconfdir}/%{drivername}/XvMCConfig
+%{_sysconfdir}/%{drivername}/nvidia-settings.xinit
 %else
 # 2006.0
 %config(noreplace) %{_sysconfdir}/X11/XvMCConfig
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/%{drivername}.conf
+%{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
 %endif
 %endif
 
