@@ -322,9 +322,12 @@ rm %{buildroot}%{_mandir}/man1/nvidia-settings.1*
 rm %{buildroot}%{_mandir}/man1/nvidia-xconfig.1*
 install -m755 ../../nvidia-settings-1.0/doc/nvidia-settings.1 %{buildroot}%{_mandir}/man1
 install -m755 ../../nvidia-xconfig-1.0/nvidia-xconfig.1 %{buildroot}%{_mandir}/man1
+# bug #41638 - whatis entries of nvidia man pages appear wrong
+gunzip %{buildroot}%{_mandir}/man1/*.gz
+sed -r -i '/^nvidia\\-[a-z]+ \\- NVIDIA/s,^nvidia\\-,nvidia-,' %{buildroot}%{_mandir}/man1/*.1
 %if %{mdkversion} >= 200700
 cd %{buildroot}%{_mandir}/man1
-rename nvidia  disabled-%{drivername} *
+rename nvidia alt-%{drivername} *
 cd -
 touch %{buildroot}%{_mandir}/man1/nvidia-xconfig.1%{_extension}
 touch %{buildroot}%{_mandir}/man1/nvidia-settings.1%{_extension}
@@ -481,8 +484,8 @@ fi
 %define compat_ext %([ "%{_extension}" == ".bz2" ] || echo %{_extension})
 %{_sbindir}/update-alternatives \
 	--install %{_sysconfdir}/ld.so.conf.d/GL.conf gl_conf %{ld_so_conf_dir}/%{ld_so_conf_file} %{priority} \
-	--slave %{_mandir}/man1/nvidia-settings.1%{_extension} man_nvidiasettings%{compat_ext} %{_mandir}/man1/disabled-%{drivername}-settings.1%{_extension} \
-	--slave %{_mandir}/man1/nvidia-xconfig.1%{_extension} man_nvidiaxconfig%{compat_ext} %{_mandir}/man1/disabled-%{drivername}-xconfig.1%{_extension} \
+	--slave %{_mandir}/man1/nvidia-settings.1%{_extension} man_nvidiasettings%{compat_ext} %{_mandir}/man1/alt-%{drivername}-settings.1%{_extension} \
+	--slave %{_mandir}/man1/nvidia-xconfig.1%{_extension} man_nvidiaxconfig%{compat_ext} %{_mandir}/man1/alt-%{drivername}-xconfig.1%{_extension} \
 	--slave %{_datadir}/applications/mandriva-nvidia-settings.desktop nvidia_desktop %{nvidia_deskdir}/mandriva-nvidia-settings.desktop \
 	--slave %{_bindir}/nvidia-settings nvidia_settings %{nvidia_bindir}/nvidia-settings \
 	--slave %{_bindir}/nvidia-smi nvidia_smi %{nvidia_bindir}/nvidia-smi \
@@ -598,8 +601,8 @@ rm -rf %{buildroot}
 %if %{mdkversion} >= 200700
 %ghost %{_mandir}/man1/nvidia-xconfig.1%{_extension}
 %ghost %{_mandir}/man1/nvidia-settings.1%{_extension}
-%{_mandir}/man1/disabled-%{drivername}-xconfig.1*
-%{_mandir}/man1/disabled-%{drivername}-settings.1*
+%{_mandir}/man1/alt-%{drivername}-xconfig.1*
+%{_mandir}/man1/alt-%{drivername}-settings.1*
 %else
 %{_mandir}/man1/nvidia-xconfig.1*
 %{_mandir}/man1/nvidia-settings.1*
