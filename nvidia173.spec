@@ -410,21 +410,12 @@ ln -s libglx.so.%{version}			%{buildroot}%{nvidia_extensionsdir}/libglx.so
 install -d -m755				%{buildroot}%{nvidia_driversdir}
 install -m755 X11R6/lib/modules/drivers/*	%{buildroot}%{nvidia_driversdir}
 
-%if %{mdkversion} <= 200900
-%if %{mdkversion} >= 200700
+%if %{mdkversion} >= 200700 && %{mdkversion} <= 200910
+install -d -m755 %{buildroot}%{xorg_libdir}/modules/drivers
 touch %{buildroot}%{xorg_libdir}/modules/drivers/nvidia_drv.so
 %endif
-%if %{mdkversion} >= 200800
+%if %{mdkversion} >= 200800 && %{mdkversion} <= 200900
 touch %{buildroot}%{xorg_libdir}/modules/extensions/libglx.so
-%endif
-%endif
-
-%if %{mdkversion} == 200910
-# XFdrake misses support for %nvidia_driversdir as %_libdir/%drivername/xorg;
-# we create a fake file to avoid a) updating XFdrake, or b) making %post %if
-# even more complex.
-install -d -m755 %{buildroot}%{xorg_libdir}/modules/drivers/%{drivername}
-echo "This file is required by XFdrake." > %{buildroot}%{xorg_libdir}/modules/drivers/%{drivername}/nvidia_drv.so
 %endif
 
 # ld.so.conf
@@ -501,6 +492,9 @@ fi
 	--slave %{_bindir}/nvidia-bug-report.sh nvidia_bug_report %{nvidia_bindir}/nvidia-bug-report.sh \
 	--slave %{_sysconfdir}/X11/XvMCConfig xvmcconfig %{nvidia_xvmcconfdir}/XvMCConfig \
 	--slave %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit nvidia-settings.xinit %{nvidia_xinitdir}/nvidia-settings.xinit \
+%if %{mdkversion} <= 200910
+	--slave %{_libdir}/xorg/modules/drivers/nvidia_drv.so nvidia_drv %{nvidia_driversdir}/nvidia_drv.so \
+%endif
 %if %{mdkversion} <= 200800
 	--slave %{_libdir}/xorg/modules/libwfb.so libwfb %{_libdir}/xorg/modules/libnvidia-wfb.so.%{version} \
 %endif
@@ -510,7 +504,6 @@ fi
 %if %{mdkversion} >= 200910
 	--slave %{xorg_extra_modules} xorg_extra_modules %{nvidia_extensionsdir} \
 %else
-	--slave %{_libdir}/xorg/modules/drivers/nvidia_drv.so nvidia_drv %{nvidia_driversdir}/nvidia_drv.so \
 	--slave %{_libdir}/xorg/modules/libnvidia-wfb.so.1 nvidia_wfb %{nvidia_modulesdir}/libnvidia-wfb.so.%{version} \
 %if %{mdkversion} >= 200900
 	--slave %{_libdir}/xorg/modules/extensions/libdri.so libdri.so %{_libdir}/xorg/modules/extensions/standard/libdri.so \
@@ -692,16 +685,10 @@ rm -rf %{buildroot}
 %ghost %{xorg_libdir}/modules/extensions/libglx.so
 %endif
 
-%if %{mdkversion} >= 200700 && %{mdkversion} <= 200900
+%if %{mdkversion} >= 200700 && %{mdkversion} <= 200910
 %ghost %{xorg_libdir}/modules/drivers/nvidia_drv.so
 %endif
 %{nvidia_driversdir}/nvidia_drv.so
-
-%if %{mdkversion} == 200910
-# fake file for XFdrake:
-%dir %{xorg_libdir}/modules/drivers/%{drivername}
-%{xorg_libdir}/modules/drivers/%{drivername}/nvidia_drv.so
-%endif
 
 %files -n %{drivername}-devel
 %defattr(-,root,root)
