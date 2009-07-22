@@ -326,7 +326,7 @@ rm %{buildroot}%{_mandir}/man1/nvidia-xconfig.1*
 install -m755 ../../nvidia-settings-1.0/doc/nvidia-settings.1 %{buildroot}%{_mandir}/man1
 install -m755 ../../nvidia-xconfig-1.0/nvidia-xconfig.1 %{buildroot}%{_mandir}/man1
 # bug #41638 - whatis entries of nvidia man pages appear wrong
-gunzip %{buildroot}%{_mandir}/man1/*.gz
+gunzip %{buildroot}%{_mandir}/man1/*.gz || :
 sed -r -i '/^nvidia\\-[a-z]+ \\- NVIDIA/s,^nvidia\\-,nvidia-,' %{buildroot}%{_mandir}/man1/*.1
 %if %{mdkversion} >= 200700
 cd %{buildroot}%{_mandir}/man1
