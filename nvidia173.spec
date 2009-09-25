@@ -450,6 +450,7 @@ LOAD_NVIDIA_SETTINGS="yes"
 [ -f %{_sysconfdir}/sysconfig/nvidia-settings ] && . %{_sysconfdir}/sysconfig/nvidia-settings
 [ "\$LOAD_NVIDIA_SETTINGS" = "yes" ] && %{_bindir}/nvidia-settings --load-config-only
 EOF
+chmod 0755 %{buildroot}%{nvidia_xinitdir}/nvidia-settings.xinit
 %if %{mdkversion} >= 200700
 install -d -m755 %{buildroot}%{_sysconfdir}/X11/xinit.d
 touch %{buildroot}%{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
