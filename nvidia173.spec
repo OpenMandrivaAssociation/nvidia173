@@ -446,6 +446,11 @@ echo "libXvMCNVIDIA_dynamic.so.1" > %{buildroot}%{nvidia_xvmcconfdir}/XvMCConfig
 install -d -m755 %{buildroot}%{nvidia_xinitdir}
 cat > %{buildroot}%{nvidia_xinitdir}/nvidia-settings.xinit <<EOF
 # to be sourced
+#
+# Do not modify this file; the changes will be overwritten.
+# If you want to disable automatic configuration loading, create
+# /etc/sysconfig/nvidia-settings with this line: LOAD_NVIDIA_SETTINGS="no"
+#
 LOAD_NVIDIA_SETTINGS="yes"
 [ -f %{_sysconfdir}/sysconfig/nvidia-settings ] && . %{_sysconfdir}/sysconfig/nvidia-settings
 [ "\$LOAD_NVIDIA_SETTINGS" = "yes" ] && %{_bindir}/nvidia-settings --load-config-only
