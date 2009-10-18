@@ -109,6 +109,8 @@ Patch0:		nvidia-settings-format-string.patch
 Patch1:		nvidia-settings-enable-dyntwinview-mdv.patch
 # --as-needed + --no-undefined
 Patch2:		nvidia-xconfig-ldflags-order.patch
+# Understand Disable keyword in xorg.conf, from upstream 190.40:
+Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -209,6 +211,14 @@ sh %{nsource} --extract-only
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
+
+cd nvidia-settings-1.0
+%patch4 -p1
+cd ..
+cd nvidia-xconfig-1.0
+%patch4 -p2
+cd ..
+
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
 # Now works properly on xen, as reported by guillomovitch, so remove the xen
