@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.20
-%define rel		5
+%define rel		6
 
 %define priority	9620
 
