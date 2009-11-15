@@ -2,8 +2,8 @@
 # I love OpenSource :-(
 
 %define name		nvidia173
-%define version		173.14.20
-%define rel		7
+%define version		173.14.22
+%define rel		1
 
 %define priority	9620
 
@@ -102,7 +102,7 @@ Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
 # GPLv2 source code; see also http://cgit.freedesktop.org/~aplattner/
 Source2:	ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-%{version}.tar.gz
-Source3:	ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-xconfig-%{version}.tar.gz
+Source3:	ftp://download.nvidia.com/XFree86/nvidia-xconfig/nvidia-xconfig-%{version}.tar.gz
 # -Werror=format-string
 Patch0:		nvidia-settings-format-string.patch
 # https://qa.mandriva.com/show_bug.cgi?id=39921
