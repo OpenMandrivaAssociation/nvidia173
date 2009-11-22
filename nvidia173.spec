@@ -111,6 +111,8 @@ Patch1:		nvidia-settings-enable-dyntwinview-mdv.patch
 Patch2:		nvidia-xconfig-ldflags-order.patch
 # Understand Disable keyword in xorg.conf, from upstream 190.40:
 Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
+# (tpg) in xserver-1.7 a X_XF86VidModeGetGammaRampSize is in xf86vmproto.h and not in xf86vmode.h
+Patch5:		nvidia-settings-1.0-missing-header.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -214,6 +216,7 @@ sh %{nsource} --extract-only
 
 cd nvidia-settings-1.0
 %patch4 -p1
+%patch5 -p1
 cd ..
 cd nvidia-xconfig-1.0
 %patch4 -p2
