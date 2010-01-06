@@ -475,7 +475,7 @@ touch %{buildroot}%{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
 %endif
 
 # don't strip files
-export DONT_STRIP=1
+export EXCLUDE_FROM_STRIP="$(find %{buildroot} -type f \! -name nvidia-settings \! -name nvidia-xconfig)"
 
 %post -n %{driverpkgname}
 %if %{mdkversion} >= 200710
