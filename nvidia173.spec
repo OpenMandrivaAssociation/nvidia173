@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.22
-%define rel		1
+%define rel		2
 
 %define priority	9620
 
@@ -113,6 +113,8 @@ Patch2:		nvidia-xconfig-ldflags-order.patch
 Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
 # (tpg) in xserver-1.7 a X_XF86VidModeGetGammaRampSize is in xf86vmproto.h and not in xf86vmode.h
 Patch5:		nvidia-settings-1.0-missing-header.patch
+# fix build on 2.6.33+
+Patch6:		nvidia-2.6.33.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -221,6 +223,10 @@ cd ..
 cd nvidia-xconfig-1.0
 %patch4 -p2
 cd ..
+
+cd %pkgname
+%patch6 -p0
+cd -
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
