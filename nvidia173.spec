@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.25
-%define rel		1
+%define rel		2
 
 %define priority	9620
 
@@ -188,14 +188,26 @@ NVIDIA kernel module for %cards. This
 is to be used with the %{driverpkgname} package.
 
 %package -n %{drivername}-devel
-Summary:	NVIDIA XvMC development library and OpenGL headers
+Summary:	NVIDIA XvMC/OpenGL/CUDA development headers (%{drivername})
 Group:		Development/C
 Requires:	%{driverpkgname} = %{version}-%{release}
+Requires:       %{drivername}-cuda = %{version}-%{release}
 
 %description -n %{drivername}-devel
 NVIDIA XvMC static development library and OpenGL headers for
 %cards. This package is not required for
 normal use.
+
+%package -n %{drivername}-cuda
+Summary:	CUDA libraries for NVIDIA proprietary driver (%{drivername})
+Group:		System/Kernel and hardware
+Requires:	%{driverpkgname} = %{version}-%{release}
+Conflicts:	%{driverpkgname} < 173.14.25-2
+
+%description -n %{drivername}-cuda
+Cuda library for NVIDIA proprietary driver for %cards.
+This package is not required for normal use, it provides libraries to
+use NVIDIA cards for High Performance Computing (HPC).
 
 # HTML doc splitted off because of size, for Mandriva One:
 %package -n %{drivername}-doc-html
@@ -652,8 +664,6 @@ rm -rf %{buildroot}
 
 %dir %{nvidia_libdir}
 %dir %{nvidia_libdir}/tls
-%{nvidia_libdir}/libcuda.so.1
-%{nvidia_libdir}/libcuda.so.%{version}
 %{nvidia_libdir}/libGL.so.1
 %{nvidia_libdir}/libGL.so.%{version}
 %{nvidia_libdir}/libGLcore.so.1
@@ -736,3 +746,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc html-doc/*
 
+%files -n %{drivername}-cuda
+%{nvidia_libdir}/libcuda.so.1
+%{nvidia_libdir}/libcuda.so.%{version}
