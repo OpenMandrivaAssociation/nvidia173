@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.25
-%define rel		2
+%define rel		3
 
 %define priority	9620
 
@@ -459,9 +459,17 @@ touch				%{buildroot}%{_sysconfdir}/ld.so.conf.d/GL.conf
 # modprobe.conf
 %if %{mdkversion} >= 200710
 install -d -m755			%{buildroot}%{_sysconfdir}/modprobe.d
-touch					%{buildroot}%{_sysconfdir}/modprobe.d/nvidia.conf
-echo "alias nvidia %{modulename}" >	%{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
+touch					%{buildroot}%{_sysconfdir}/modprobe.d/display-driver
+echo "alias nvidia %{modulename}"	>  %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
+echo "blacklist nouveau"		>> %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
 %endif
+
+# modprobe.preload.d
+# This is here because sometimes (one case reported by Christophe Fergeau on 04/2010)
+# starting X server fails if the driver module is not already loaded.
+install -d -m755			%{buildroot}%{_sysconfdir}/modprobe.preload.d
+touch					%{buildroot}%{_sysconfdir}/modprobe.preload.d/display-driver
+echo "%{modulename}"			>  %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.preload
 
 # XvMCConfig
 install -d -m755 %{buildroot}%{nvidia_xvmcconfdir}
@@ -532,7 +540,8 @@ fi
 	--slave %{_libdir}/xorg/modules/libwfb.so libwfb %{_libdir}/xorg/modules/libnvidia-wfb.so.%{version} \
 %endif
 %if %{mdkversion} >= 200710
-	--slave %{_sysconfdir}/modprobe.d/nvidia.conf nvidia_modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
+	--slave %{_sysconfdir}/modprobe.d/display-driver display-driver.modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
+	--slave %{_sysconfdir}/modprobe.preload.d/display-driver display-driver.preload %{_sysconfdir}/%{drivername}/modprobe.preload \
 %endif
 %if %{mdkversion} >= 200910
 	--slave %{xorg_extra_modules} xorg_extra_modules %{nvidia_extensionsdir} \
@@ -604,9 +613,11 @@ rm -rf %{buildroot}
 # 2007.1+
 %ghost %{_sysconfdir}/ld.so.conf.d/GL.conf
 %ghost %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
-%ghost %{_sysconfdir}/modprobe.d/nvidia.conf
+%ghost %{_sysconfdir}/modprobe.d/display-driver
+%ghost %{_sysconfdir}/modprobe.preload.d/display-driver
 %dir %{_sysconfdir}/%{drivername}
 %{_sysconfdir}/%{drivername}/modprobe.conf
+%{_sysconfdir}/%{drivername}/modprobe.preload
 %{_sysconfdir}/%{drivername}/ld.so.conf
 %{_sysconfdir}/%{drivername}/XvMCConfig
 %{_sysconfdir}/%{drivername}/nvidia-settings.xinit
