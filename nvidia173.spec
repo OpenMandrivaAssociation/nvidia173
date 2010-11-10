@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.28
-%define rel		1
+%define rel		2
 
 %define priority	9620
 
@@ -161,6 +161,7 @@ Requires:	kmod(%{modulename}) = %{version}
 %if %{mdkversion} >= 200910
 Conflicts:	x11-server-common < 1.6.0-11
 %endif
+Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
 
 %description -n %{driverpkgname}
 NVIDIA proprietary X.org graphics driver, related libraries and
