@@ -5,6 +5,9 @@
 %define version		173.14.28
 %define rel		2
 
+# the highest supported videodrv abi
+%define videodrv_abi	8
+
 %define priority	9620
 
 # pkg0: plain archive
@@ -161,7 +164,11 @@ Requires:	kmod(%{modulename}) = %{version}
 %if %{mdkversion} >= 200910
 Conflicts:	x11-server-common < 1.6.0-11
 %endif
-Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
+Requires:	x11-server-common
+# Conflict with the next videodrv ABI break.
+# The NVIDIA driver supports the previous ABI versions as well and therefore
+# a strict version-specific requirement would not be enough.
+Conflicts:	xserver-abi(videodrv-%(echo $((%{videodrv_abi} + 1))))
 
 %description -n %{driverpkgname}
 NVIDIA proprietary X.org graphics driver, related libraries and
