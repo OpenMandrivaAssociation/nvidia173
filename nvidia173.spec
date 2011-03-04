@@ -467,7 +467,7 @@ touch				%{buildroot}%{_sysconfdir}/ld.so.conf.d/GL.conf
 # modprobe.conf
 %if %{mdkversion} >= 200710
 install -d -m755			%{buildroot}%{_sysconfdir}/modprobe.d
-touch					%{buildroot}%{_sysconfdir}/modprobe.d/display-driver
+touch					%{buildroot}%{_sysconfdir}/modprobe.d/display-driver.conf
 echo "alias nvidia %{modulename}"	>  %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
 echo "blacklist nouveau"		>> %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
 %endif
@@ -548,7 +548,7 @@ fi
 	--slave %{_libdir}/xorg/modules/libwfb.so libwfb %{_libdir}/xorg/modules/libnvidia-wfb.so.%{version} \
 %endif
 %if %{mdkversion} >= 200710
-	--slave %{_sysconfdir}/modprobe.d/display-driver display-driver.modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
+	--slave %{_sysconfdir}/modprobe.d/display-driver.conf display-driver.conf %{_sysconfdir}/%{drivername}/modprobe.conf \
 	--slave %{_sysconfdir}/modprobe.preload.d/display-driver display-driver.preload %{_sysconfdir}/%{drivername}/modprobe.preload \
 %endif
 %if %{mdkversion} >= 200910
@@ -621,7 +621,7 @@ rm -rf %{buildroot}
 # 2007.1+
 %ghost %{_sysconfdir}/ld.so.conf.d/GL.conf
 %ghost %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
-%ghost %{_sysconfdir}/modprobe.d/display-driver
+%ghost %{_sysconfdir}/modprobe.d/display-driver.conf
 %ghost %{_sysconfdir}/modprobe.preload.d/display-driver
 %dir %{_sysconfdir}/%{drivername}
 %{_sysconfdir}/%{drivername}/modprobe.conf
