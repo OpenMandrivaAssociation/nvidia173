@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.28
-%define rel		2
+%define rel		3
 
 # the highest supported videodrv abi
 %define videodrv_abi	8
@@ -168,7 +168,8 @@ Requires:	x11-server-common
 # Conflict with the next videodrv ABI break.
 # The NVIDIA driver supports the previous ABI versions as well and therefore
 # a strict version-specific requirement would not be enough.
-Conflicts:	xserver-abi(videodrv-%(echo $((%{videodrv_abi} + 1))))
+### This is problematic as it can cause removal of xserver instead (Anssi 04/2011)
+###Conflicts:  xserver-abi(videodrv-%(echo $((%{videodrv_abi} + 1))))
 
 %description -n %{driverpkgname}
 NVIDIA proprietary X.org graphics driver, related libraries and
@@ -468,16 +469,18 @@ touch				%{buildroot}%{_sysconfdir}/ld.so.conf.d/GL.conf
 %if %{mdkversion} >= 200710
 install -d -m755			%{buildroot}%{_sysconfdir}/modprobe.d
 touch					%{buildroot}%{_sysconfdir}/modprobe.d/display-driver.conf
-echo "alias nvidia %{modulename}"	>  %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
-echo "blacklist nouveau"		>> %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
+echo "install nvidia /sbin/modprobe %{modulename} \$CMDLINE_OPTS" > %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.conf
 %endif
 
+%if %{mdkversion} < 201100
 # modprobe.preload.d
 # This is here because sometimes (one case reported by Christophe Fergeau on 04/2010)
 # starting X server fails if the driver module is not already loaded.
+# This is fixed by the reworked kms-dkms-plymouth-drakx-initrd system in 2011.0.
 install -d -m755			%{buildroot}%{_sysconfdir}/modprobe.preload.d
 touch					%{buildroot}%{_sysconfdir}/modprobe.preload.d/display-driver
 echo "%{modulename}"			>  %{buildroot}%{_sysconfdir}/%{drivername}/modprobe.preload
+%endif
 
 # XvMCConfig
 install -d -m755 %{buildroot}%{nvidia_xvmcconfdir}
@@ -549,7 +552,9 @@ fi
 %endif
 %if %{mdkversion} >= 200710
 	--slave %{_sysconfdir}/modprobe.d/display-driver.conf display-driver.conf %{_sysconfdir}/%{drivername}/modprobe.conf \
+%if %{mdkversion} < 201100
 	--slave %{_sysconfdir}/modprobe.preload.d/display-driver display-driver.preload %{_sysconfdir}/%{drivername}/modprobe.preload \
+%endif
 %endif
 %if %{mdkversion} >= 200910
 	--slave %{xorg_extra_modules} xorg_extra_modules %{nvidia_extensionsdir} \
@@ -622,10 +627,14 @@ rm -rf %{buildroot}
 %ghost %{_sysconfdir}/ld.so.conf.d/GL.conf
 %ghost %{_sysconfdir}/X11/xinit.d/nvidia-settings.xinit
 %ghost %{_sysconfdir}/modprobe.d/display-driver.conf
+%if %{mdkversion} < 201100
 %ghost %{_sysconfdir}/modprobe.preload.d/display-driver
+%endif
 %dir %{_sysconfdir}/%{drivername}
 %{_sysconfdir}/%{drivername}/modprobe.conf
+%if %{mdkversion} < 201100
 %{_sysconfdir}/%{drivername}/modprobe.preload
+%endif
 %{_sysconfdir}/%{drivername}/ld.so.conf
 %{_sysconfdir}/%{drivername}/XvMCConfig
 %{_sysconfdir}/%{drivername}/nvidia-settings.xinit
