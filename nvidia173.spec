@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.30
-%define rel		1
+%define rel		2
 
 # the highest supported videodrv abi
 %define videodrv_abi	8
@@ -116,6 +116,8 @@ Patch2:		nvidia-xconfig-ldflags-order.patch
 Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
 # (tpg) in 2010.1+ X_XF86VidModeGetGammaRampSize is in xf86vmproto.h and not in xf86vmode.h
 Patch5:		nvidia-settings-1.0-missing-header.patch
+# Fix build for 3.x kernel serie
+Patch6:		nvidia-fix-build-for-3.x.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
