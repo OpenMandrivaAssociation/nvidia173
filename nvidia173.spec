@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.30
-%define rel		2
+%define rel		3
 
 # the highest supported videodrv abi
 %define videodrv_abi	8
