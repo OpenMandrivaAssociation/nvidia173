@@ -1,0 +1,13 @@
+Index: nvidia-xconfig-1.0/Makefile
+===================================================================
+--- nvidia-xconfig-1.0/Makefile
++++ nvidia-xconfig-1.0/Makefile	2009-07-17 04:57:37.864972197 +0300
+@@ -152,7 +152,7 @@
+ 	$(INSTALL_RULE)
+ 
+ $(NVIDIA_XCONFIG): $(OBJS) $(LIB)
+-	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@ $(LIB)
++	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIB) $(LDFLAGS)
+ 
+ .PHONY: $(LIB) dist clean clobber
+ 

@@ -1,0 +1,15 @@
+--- nvidia-settings-1.0/src/gtk+-2.x/ctkdisplayconfig-utils.c	2009-05-27 13:21:27.000000000 +0300
++++ nvidia-settings-1.0/src/gtk+-2.x/.patcher/pristine/ctkdisplayconfig-utils.c	2009-07-17 04:44:48.859972872 +0300
+@@ -2041,8 +2041,10 @@
+     ret = NvCtrlGetAttribute(screen->handle, NV_CTRL_DYNAMIC_TWINVIEW,
+                              &val);
+     if (ret != NvCtrlSuccess || !val) {
+-        *err_str = g_strdup_printf("Dynamic TwinView is disabled on "
+-                                   "screen %d.",
++        *err_str = g_strdup_printf("Dynamic TwinView is disabled on screen %d.\n"
++				   "To enable it, enable the option \"Enable duplicate display\n"
++				   "on the second display\" in DrakX11 (Mandriva Control Center =>\n"
++				   "Hardware => Set up the graphical server => Options).",
+                                    screen_id);
+         nv_warning_msg(*err_str);
+         goto fail;
