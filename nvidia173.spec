@@ -123,10 +123,10 @@ BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
 Group: 		System/Kernel and hardware
 ExclusiveArch:	%{ix86} x86_64
-BuildRequires:	ImageMagick
+BuildRequires:	imagemagick
 BuildRequires:  gtk+2-devel
 BuildRequires:  libxxf86vm-devel
-BuildRequires:	MesaGL-devel
+BuildRequires:	mesagl-devel
 %if %{mdkversion} >= 200700
 BuildRequires:	libxv-devel
 %endif
