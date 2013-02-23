@@ -1,5 +1,5 @@
 sources:
-  "NVIDIA-Linux-x86-173.14.31-pkg0.run:"	470e19fdfa75f18522745de285e256808fe14d48
-  "NVIDIA-Linux-x86_64-173.14.31-pkg2.run:"	155f1951897a274a0c693912015e049d0d4cbec1
-  "nvidia-settings-173.14.31.tar.gz:"	9395ea99cb01a474bc5bb580bd6cd2947bc42d60
-  "nvidia-xconfig-173.14.31.tar.gz:"	f219c2887acb11d1beb3b4c57d8b037e7ea5db9f
+  nvidia-settings-173.14.31.tar.gz: 9395ea99cb01a474bc5bb580bd6cd2947bc42d60
+  nvidia-xconfig-173.14.31.tar.gz: f219c2887acb11d1beb3b4c57d8b037e7ea5db9f
+  NVIDIA-Linux-x86-173.14.31-pkg0.run: 470e19fdfa75f18522745de285e256808fe14d48
+  NVIDIA-Linux-x86_64-173.14.31-pkg2.run: 155f1951897a274a0c693912015e049d0d4cbec1
