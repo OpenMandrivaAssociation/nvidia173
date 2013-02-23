@@ -316,6 +316,10 @@ sed -i 's|-O ||' nvidia-xconfig-1.0/Makefile
 rm nvidia-settings-1.0/src/*/*.a
 
 %build
+mkdir -p bfd
+ln -sf $(which ld.bfd) bfd/ld
+export PATH="$PWD/bfd:$PATH"
+
 cd nvidia-settings-1.0
 %make CFLAGS="%optflags" LDFLAGS="%{?ldflags}"
 cd ../nvidia-xconfig-1.0
