@@ -118,6 +118,7 @@ Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
 Patch5:		nvidia-settings-1.0-missing-header.patch
 # Fix build for 3.x kernel serie
 Patch6:		nvidia-fix-build-for-3.x.patch
+Patch7:		nvidia173-173.14.31-link-against-libdl.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -244,6 +245,7 @@ cd ..
 cd nvidia-xconfig-1.0
 %patch4 -p2
 cd ..
+%patch7 -p1 -b .libdl~
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
 

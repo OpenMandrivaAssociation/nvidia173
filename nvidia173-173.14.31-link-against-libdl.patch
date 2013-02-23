@@ -1,0 +1,11 @@
+--- nvidia173-173.14.31/nvidia-settings-1.0/Makefile~	2013-02-23 09:22:07.693302839 +0100
++++ nvidia173-173.14.31/nvidia-settings-1.0/Makefile	2013-02-23 09:27:05.551767801 +0100
+@@ -145,7 +145,7 @@ SRCDIRS := $(addprefix $(CURDIR)/, $(REL
+ INC_FLAGS := $(addprefix -I , $(RELATIVE_SRCDIRS))
+ 
+ ALL_CFLAGS = $(CFLAGS) $(LOCAL_CFLAGS) $(X11_CFLAGS) $(GTK_CFLAGS) $(INC_FLAGS)
+-ALL_LDFLAGS = $(LD_RUN_FLAG) $(LDFLAGS) $(GTK_LDFLAGS) $(X11_LIBS) -lm
++ALL_LDFLAGS = $(LD_RUN_FLAG) $(LDFLAGS) $(GTK_LDFLAGS) $(X11_LIBS) -lm -ldl
+ 
+ CPPFLAGS = $(ALL_CFLAGS)
+ 
