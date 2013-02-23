@@ -84,17 +84,30 @@
 
 # Other packages should not require any NVIDIA libraries, and this package
 # should not be pulled in when libGL.so.1 is required
+%if %{_use_internal_dependency_generator}
+%define __noautoprov '\\.so'
+%define common_requires_exceptions libGLcore\\.so|libnvidia.*\\.so
+%else
 %define _provides_exceptions \\.so
-%define common_requires_exceptions libGLcore\\.so\\|libnvidia-tls\\.so
+%define common_requires_exceptions libGLcore\\.so\\|libnvidia.*\\.so
+%endif
 
 %ifarch %{biarches}
 # (anssi) Allow installing of 64-bit package if the runtime dependencies
 # of 32-bit libraries are not satisfied. If a 32-bit package that requires
 # libGL.so.1 is installed, the 32-bit mesa libs are pulled in and that will
 # pull the dependencies of 32-bit nvidia libraries in as well.
-%define _requires_exceptions %common_requires_exceptions\\|lib.*so\\.[^(]\\+\\(([^)]\\+)\\)\\?$
+%if %{_use_internal_dependency_generator}
+%define __noautoreq '%{common_requires_exceptions}|lib.*so\\.[^(]+(\\([^)]+\\))?$'
 %else
-%define _requires_exceptions %common_requires_exceptions
+%define __noautoreq %{common_requires_exceptions}\\|lib.*so\\.[^(]\\+\\(([^)]\\+)\\)\\?$
+%endif
+%else
+%if %{_use_internal_dependency_generator}
+%define __noautoreq '%{common_requires_exceptions}'
+%else
+%define __noautoreq %{common_requires_exceptions}
+%endif
 %endif
 
 Summary:	NVIDIA proprietary X.org driver and libraries, 173.14.xx series
