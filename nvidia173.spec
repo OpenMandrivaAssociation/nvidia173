@@ -3,7 +3,7 @@
 
 %define name		nvidia173
 %define version		173.14.31
-%define rel		1
+%define rel		2
 
 # the highest supported videodrv abi
 %define videodrv_abi	8
@@ -132,6 +132,7 @@ Patch5:		nvidia-settings-1.0-missing-header.patch
 # Fix build for 3.x kernel serie
 Patch6:		nvidia-fix-build-for-3.x.patch
 Patch7:		nvidia173-173.14.31-link-against-libdl.patch
+Patch8:		nvidia173-173.14.31-dont-check-patchlevel-and-sublevel.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -259,6 +260,7 @@ cd nvidia-xconfig-1.0
 %patch4 -p2
 cd ..
 %patch7 -p1 -b .libdl~
+%patch8 -p1 -b .3x~
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
 

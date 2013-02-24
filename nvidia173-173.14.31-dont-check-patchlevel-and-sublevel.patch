@@ -1,0 +1,20 @@
+--- nvidia173-173.14.31/NVIDIA-Linux-x86_64-173.14.31-pkg2/usr/src/nv/conftest.sh.3x~	2011-07-12 19:05:40.000000000 +0200
++++ nvidia173-173.14.31/NVIDIA-Linux-x86_64-173.14.31-pkg2/usr/src/nv/conftest.sh	2013-02-24 16:33:46.465915426 +0100
+@@ -1422,15 +1422,9 @@ case "$5" in
+                 # a Makefile and a .config file. If this is a 2.6
+                 # kernel older than 2.6.6, that's all we require to
+                 # build the module.
+-                #
+-                PATCHLEVEL=$(grep "^PATCHLEVEL =" $MAKEFILE | cut -d " " -f 3)
+-                SUBLEVEL=$(grep "^SUBLEVEL =" $MAKEFILE | cut -d " " -f 3)
+ 
+-                if [ -n "$PATCHLEVEL" -a $PATCHLEVEL -ge 6 \
+-                        -a -n "$SUBLEVEL" -a $SUBLEVEL -le 5 ]; then
+-                    SELECTED_MAKEFILE=Makefile.kbuild
+-                    RET=0
+-                fi
++                SELECTED_MAKEFILE=Makefile.kbuild
++                RET=0
+             fi
+         fi
+ 
