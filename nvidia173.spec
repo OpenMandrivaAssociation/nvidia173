@@ -2,8 +2,8 @@
 # I love OpenSource :-(
 
 %define name		nvidia173
-%define version		173.14.31
-%define rel		2
+%define version		173.14.37
+%define rel		1
 
 # the highest supported videodrv abi
 %define videodrv_abi	8
