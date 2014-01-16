@@ -1,7 +1,7 @@
 # I love OpenSource :-(
 
 # the highest supported videodrv abi
-%define videodrv_abi	8
+%define videodrv_abi	15
 
 %define priority	9620
 
@@ -94,8 +94,8 @@
 
 Summary:	NVIDIA proprietary X.org driver and libraries, 173.14.xx series
 Name:		nvidia173
-Version:	173.14.38
-Release:	3
+Version:	173.14.39
+Release:	1
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
 # GPLv2 source code; see also http://cgit.freedesktop.org/~aplattner/
