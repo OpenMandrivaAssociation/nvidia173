@@ -101,6 +101,7 @@ Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.
 # GPLv2 source code; see also http://cgit.freedesktop.org/~aplattner/
 Source2:	ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-%{version}.tar.gz
 Source3:	ftp://download.nvidia.com/XFree86/nvidia-xconfig/nvidia-xconfig-%{version}.tar.gz
+Source100:	nvidia173.rpmlintrc
 # -Werror=format-string
 Patch0:		nvidia-settings-format-string.patch
 # https://qa.mandriva.com/show_bug.cgi?id=39921
