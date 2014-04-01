@@ -95,7 +95,7 @@
 Summary:	NVIDIA proprietary X.org driver and libraries, 173.14.xx series
 Name:		nvidia173
 Version:	173.14.39
-Release:	1
+Release:	2
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
 # GPLv2 source code; see also http://cgit.freedesktop.org/~aplattner/
@@ -115,6 +115,7 @@ Patch5:		nvidia-settings-1.0-missing-header.patch
 Patch6:		nvidia-fix-build-for-3.x.patch
 Patch7:		nvidia173-173.14.31-link-against-libdl.patch
 Patch8:		nvidia173-173.14.31-dont-check-patchlevel-and-sublevel.patch
+Patch9:		173xx-linux-3.13.patch
 License:	Freeware
 URL:		http://www.nvidia.com/object/unix.html
 Group: 		System/Kernel and hardware
@@ -243,6 +244,7 @@ cd ..
 %patch7 -p1 -b .libdl~
 pushd %{pkgname}
 %patch8 -p2 -b .3x~
+%patch9 -p0
 popd
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
