@@ -118,7 +118,7 @@ Patch7:		nvidia173-173.14.31-link-against-libdl.patch
 Patch8:		nvidia173-173.14.31-dont-check-patchlevel-and-sublevel.patch
 Patch9:		173xx-linux-3.13.patch
 License:	Freeware
-URL:		http://www.nvidia.com/object/unix.html
+URL:		https://www.nvidia.com/object/unix.html
 Group: 		System/Kernel and hardware
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	imagemagick
